@@ -1,0 +1,102 @@
+# This file is a template, and might need editing before it works on your project.
+
+## HOW TO ACTIVATE ##
+# 1. Change the slug below to fit your project
+
+variables:
+  # TODO: change slug to fit your project
+  SLUG: '2019/react-base'
+
+  # For cases when you want to have different environments in GitLab
+  # Example: In Hearken, there is a version for Tagi and one for ZSZ, and they
+  # use different environment names
+  ENVIRONMENT_PREFIX: 'mantel'
+
+  # the following variables don't need changing, as a rule
+  BUILD_DIR: 'dist/'
+  GIT_DEPTH: '1'
+
+stages:
+  - test
+  - deploy
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
+# executed before each job
+before_script:
+  - yarn install
+
+.only_production: &only_production
+  only:
+    - /^production.*/
+
+.only_staging: &only_staging
+  only:
+    - /^master.*/
+
+# Test Job
+# The React base contains some basic quality checks.
+.test_template:
+  stage: test
+  coverage: /All\sfiles.*?\s+(\d+.\d+)/
+  script:
+    - yarn test:ci
+
+# Default test. Should run in most cases, except on the master branch,
+# since there we have the staging version that we allow to fail
+unit_tests:
+  extends: .test_template
+  except:
+    - /^master.*/
+
+unit_test_staging:
+  extends: .test_template
+  allow_failure: true # we allow it to fail on staging
+  <<: *only_staging
+
+# Check whether the gitlab configuration is correct – making sure that we do not
+# deploy to the basic "2019/react-base" slug all the time.
+gitlab_configuration:
+  stage: test
+  script:
+    - yarn test:gitlab-config
+  allow_failure: false # make sure that if this fails, no deployment happens
+  only:
+    - /^production.*/
+    - /^master.*/
+  except:
+    - merge_requests
+
+# Deploy Job Template
+.deploy:
+  variables:
+    STAGING_PREFIX: 'staging/'
+    DEV_PREFIX: 'dev-'
+  stage: deploy
+  except:
+    - merge_requests # we'd rather not deploy on merge requests
+  environment:
+    name: $ENVIRONMENT_PREFIX/staging
+    url: https://interaktiv.tagesanzeiger.ch/$STAGING_PREFIX$SLUG
+  script:
+    - yarn run dist
+    - aws s3 sync --delete --cache-control 'no-cache' $BUILD_DIR s3://${DEV_PREFIX}interaktiv-tenant-source/$SLUG
+
+deploy_staging:
+  extends: .deploy
+  <<: *only_staging
+
+deploy_production:
+  extends: .deploy
+  <<: *only_production
+  environment:
+    name: $ENVIRONMENT_PREFIX/production
+  variables:
+    STAGING_PREFIX: ''
+    DEV_PREFIX: ''
+
+# Docker image to use
+image: registry.gitlab.com/ta-interaktiv/react-base-build

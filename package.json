@@ -1,0 +1,152 @@
+{
+  "name": "@ta-interaktiv/react-base",
+  "version": "0.22.5",
+  "private": true,
+  "description": "Base React repository, used to quickly spin up a react visualisation project.",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "yarn run dist",
+    "changelog": "standard-changelog",
+    "clean": "rimraf dist/*",
+    "dist": "NODE_ENV=production webpack --env.production --bail",
+    "fix": "eslint  --fix --ext .js,.jsx,.ts,.tsx ./src",
+    "format": "prettier 'src/**/*.{js,jsx,ts,tsx,json,css,scss,sass,styl,yaml,yml}' --write",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src",
+    "postdist": "react-snap; rm -f dist/index.html dist/200.html dist/404.html",
+    "predist": "yarn run clean",
+    "preversion": "git checkout master && git pull",
+    "serve": "webpack-dev-server --env.development --open --hot",
+    "start": "yarn run serve",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:ci": "jest --ci --coverage",
+    "test:gitlab-config": "jest --ci gitlab-ci",
+    "test:coverage": "jest --coverage",
+    "version": "yarn run fix && yarn run changelog && git add --all",
+    "colab": "node ./scripts/load-colab.js 1_XWYHM7_xpDpkPTZZhjUwko4-Yyl0bo1 ./src/text"
+  },
+  "keywords": [],
+  "contributors": [
+    "Kaspar Manz <kaspar.manz@tamedia.ch>",
+    "Marc Fehr <marc.fehr@tamedia.ch>",
+    "Mathias Lutz <mathias.lutz@tamedia.ch>",
+    "Patrick Vögeli <patrick.voegeli@tamedia.ch>",
+    "Sebastian Broschinski <sebastian.broschinski@tamedia.ch>",
+    "Andreas Moor <andreas.moor@tamedia.ch"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.7.7",
+    "@ta-interaktiv/babel-preset-react-project": "^2.1.4",
+    "@ta-interaktiv/eslint-config": "^2.0.0",
+    "@ta-interaktiv/jest-preset": "^2.0.0",
+    "@ta-interaktiv/types": "^0.3.0",
+    "@ta-interaktiv/webpack-config": "^3.0.0",
+    "@types/cosmiconfig": "^6.0.0",
+    "@types/enzyme": "^3.10.4",
+    "@types/jest": "^25.1.4",
+    "@types/react": "^16.9.17",
+    "@types/react-dom": "^16.9.4",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^25.1.0",
+    "babel-loader": "^8.0.4",
+    "caniuse-lite": "^1.0.30001020",
+    "cosmiconfig": "^6.0.0",
+    "cssnano": "^4.1.4",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
+    "enzyme-to-json": "^3.4.3",
+    "eslint": "^6.8.0",
+    "glob": "^7.1.6",
+    "husky": "^4.0.6",
+    "jest": "^25.1.0",
+    "jest-environment-enzyme": "^7.1.2",
+    "jest-environment-jsdom": "^25.1.0",
+    "jest-enzyme": "^7.1.2",
+    "lint-staged": "^10.0.8",
+    "minimist": "^1.2.0",
+    "postcss-preset-env": "^6.1.1",
+    "prettier": "1.19.1",
+    "react-hot-loader": "^4.12.18",
+    "react-snap": "^1.19.0",
+    "react-test-renderer": "^16.12.0",
+    "request": "^2.88.2",
+    "rimraf": "^3.0.0",
+    "standard-changelog": "^2.0.21",
+    "typescript": "^3.7.4",
+    "url-parse": "^1.4.3",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1",
+    "webpack-merge": "^4.2.2"
+  },
+  "dependencies": {
+    "@mdx-js/react": "^1.5.8",
+    "@ta-interaktiv/react-footer": "^2.1.0",
+    "@ta-interaktiv/react-masthead": "^6.0.1",
+    "@ta-interaktiv/react-theme-switch": "^2.0.2",
+    "@ta-interaktiv/semantic-ui": "^3.3.0",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2"
+  },
+  "engines": {
+    "node": ">=10.0.0",
+    "yarn": "*"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "author": "Kaspar Manz <kaspar.manz@tages-anzeiger.ch>",
+  "license": "ISC",
+  "browserslist": [
+    "cover 98% in CH",
+    "not dead"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.com:ta-interaktiv/project-templates/react-base.git"
+  },
+  "reactSnap": {
+    "source": "dist",
+    "inlineCss": false,
+    "skipThirdPartyRequests": false,
+    "minifyHtml": {
+      "sortClassName": false
+    },
+    "puppeteerArgs": [
+      "--no-sandbox",
+      "--disable-setuid-sandbox"
+    ],
+    "include": [
+      "/index-24heures.html",
+      "/index-bazonline.html",
+      "/index-berneroberlaender.html",
+      "/index-bernerzeitung.html",
+      "/index-derbund.html",
+      "/index-landbote.html",
+      "/index-langenthalertagblatt.html",
+      "/index-tagesanzeiger.html",
+      "/index-tdg.html",
+      "/index-thunertagblatt.html",
+      "/index-zsz.html",
+      "/index-zuonline.html"
+    ],
+    "puppeteerExecutablePath": "./scripts/chromium"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "**/*.{css,scss,sass,less,json,yaml,yml,md,mdown,mdx}": [
+      "prettier --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint-staged",
+      "post-checkout": "yarn install",
+      "post-merge": "yarn install"
+    }
+  }
+}

@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="React Project Sources" pattern="file[ta-react-base]:src//*" />
+</component>

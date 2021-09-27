@@ -1,0 +1,13 @@
+{
+  "npm.enableScriptExplorer": true,
+  "npm.packageManager": "yarn",
+  "typescript.suggest.completeFunctionCalls": true,
+  "standard.enable": false,
+  "eslint.packageManager": "yarn",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.packageManager": "yarn",
+  "prettier.requireConfig": true
+}
